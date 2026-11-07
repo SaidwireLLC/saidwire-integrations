@@ -1,0 +1,45 @@
+# Saidwire
+
+> Saidwire is a speech-to-text API for people building with AI: live English streaming over a WebSocket, and file transcription over HTTP. It follows the widely used `/v1/listen` and `/v1/audio/transcriptions` request shapes, so a client that lets you set a base URL usually needs only a new base URL and key. $0.30 per audio hour, billed per second. 120 free hours, no card, no deadline.
+
+Key facts for code that calls the API:
+
+- Get a key: https://saidwire.com/dev. Keys look like `sk_live_<id>.<secret>` and are shown once.
+- Keep the key on a server, in an environment variable named `SAIDWIRE_API_KEY`. Never put it in browser or mobile code, and never in a variable that a build tool exposes to clients (`NEXT_PUBLIC_`, `VITE_`, `EXPO_PUBLIC_`, `REACT_APP_`). Browser apps call your own server, which calls Saidwire. There are no short-lived browser tokens.
+- Auth: header `Authorization: Token <key>` or `Authorization: Bearer <key>`.
+- Files, native: `POST https://api.saidwire.com/v1/listen?punctuate=true` with the raw audio as the body, or JSON `{"url": "https://..."}` for a public file (the download must finish within 30 s). The transcript is at `results.channels[0].alternatives[0].transcript`, and word timings at `.words[]` (`word`, `punctuated_word`, `start`, `end`). Add `utterances=true` for `results.utterances[]`.
+- Files, ready-made subtitles: `POST https://api.saidwire.com/v1/audio/transcriptions`, multipart fields `file`, `model=saidwire-en`, `response_format` = `json`, `text`, `verbose_json`, `srt` or `vtt`. Base URL `https://api.saidwire.com/v1`.
+- File limits: 100 MB and 60 minutes per request. The request waits for the whole result. There are no callbacks or webhooks. Split longer files first and add each piece's start time to its word timings.
+- File formats: WAV, MP3, FLAC, Ogg/Opus, WebM, and AAC on `/v1/listen`. For video, extract the audio first (`ffmpeg -i in.mp4 -vn -ac 1 -ar 16000 -b:a 64k out.mp3`).
+- Live: `wss://api.saidwire.com/v1/listen`. Send binary audio in real time, in frames of 20-100 ms. `encoding=linear16` with `sample_rate` 8000-48000 has the least delay. `mulaw` and `alaw` suit phone audio. `webm`, `ogg`, `opus`, `flac` and `mp3` also work, or omit `encoding` to auto-detect a container, with some extra delay (about 0.1-0.3 s for Opus and MP3, more for FLAC).
+- Live parameters that work: `interim_results`, `punctuate`, `smart_format` (same as punctuate; it does not format numbers), `endpointing` (ms of pause that ends a turn; minimum 500, default 800; or `false`), `utterance_end_ms`, `vad_events`, `language`, `early_words`.
+- Client messages: binary audio; `{"type": "KeepAlive"}` (a stream with no audio and no KeepAlive for 10 s is closed); `{"type": "Finalize"}` (a final transcript now); `{"type": "CloseStream"}` (flush, last final, `Metadata`, close 1000).
+- Server messages: `Results` (`is_final`, `speech_final`, `channel.alternatives[0].transcript`), `UtteranceEnd`, `SpeechStarted`, `EarlyWord`, `Metadata` (once, at the end), `Error` (then the socket closes). Each interim replaces the previous one. Finals do not change.
+- English only (`en`, `en-US`, `en-GB`, ...). Mono only.
+- Not available: speaker labels, multichannel, key-term boosting, redaction, number formatting, translation, summaries, callbacks. Parameters such as `diarize`, `keyterm`, `keywords`, `redact`, `numerals`, `multichannel`, `summarize` and `callback` are accepted and silently ignored, so never generate code that depends on them. Full list: https://saidwire.com/docs/api#ignored-parameters
+- `confidence` is a fixed 0.95, not a real score. Do not build on it.
+- Limits per key: 4 live streams at once, 60 new streams a minute, 2 file requests at once, 4 hours per stream.
+- Errors: 400 bad request or audio, 401 bad key, 402 or 429 `insufficient_quota` hours used up (do not retry), 403 revoked key, 413 file too big or too long, 429 too many at once and 5xx temporary (wait for `Retry-After`, then retry). Every response has a request id in the `x-request-id` header.
+- Accuracy depends on the audio. Test on your own recordings before you rely on it.
+- Data today: audio is processed in memory and not stored, and transcripts are not stored or logged.
+
+## Docs
+
+- [Agent quickstart](https://saidwire.com/docs/agents): the shortest working path for AI coding tools
+- [Quickstart](https://saidwire.com/docs): first transcript in Python, Node.js and curl
+- [API reference](https://saidwire.com/docs/api): every parameter, message, error, limit and compatibility note
+- [Accepted but ignored parameters](https://saidwire.com/docs/api#ignored-parameters): parameters that have no effect
+- [Integrations](https://saidwire.com/integrations): `pip install saidwire-mcp`, `pip install livekit-plugins-saidwire`, `pip install pipecat-saidwire`, `npm install @saidwire/ai-sdk-provider`, `n8n-nodes-saidwire`
+
+## Service
+
+- [Pricing](https://saidwire.com/developers/pricing): $0.30 per audio hour, 120 free hours, no card, no deadline
+- [Status](https://saidwire.com/status): live check every 5 minutes, last 24 hours
+- [Security](https://saidwire.com/security): data handling, encryption, keys
+- [Changelog](https://saidwire.com/changelog): dated API changes
+
+## Optional
+
+- [API terms](https://saidwire.com/legal/api-terms)
+- [API privacy notice](https://saidwire.com/legal/api-privacy)
+- Support: support@saidwire.com

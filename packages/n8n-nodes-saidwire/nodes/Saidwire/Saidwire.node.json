@@ -1,0 +1,18 @@
+{
+	"node": "n8n-nodes-saidwire.saidwire",
+	"nodeVersion": "1.0",
+	"codexVersion": "1.0",
+	"categories": ["Utility", "Productivity"],
+	"resources": {
+		"credentialDocumentation": [
+			{
+				"url": "https://github.com/SaidwireLLC/saidwire-integrations/tree/main/packages/n8n-nodes-saidwire#credentials"
+			}
+		],
+		"primaryDocumentation": [
+			{
+				"url": "https://github.com/SaidwireLLC/saidwire-integrations/tree/main/packages/n8n-nodes-saidwire"
+			}
+		]
+	}
+}

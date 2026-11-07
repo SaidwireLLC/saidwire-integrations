@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Voice notes</title>
+<style>
+  :root { color-scheme: light dark; --line: #8884; }
+  body { font: 17px/1.5 system-ui, sans-serif; max-width: 640px; margin: 0 auto; padding: 24px 16px; }
+  h1 { font-size: 24px; margin: 0 0 16px; }
+  button { font: inherit; padding: 10px 18px; border-radius: 8px; border: 1px solid var(--line); cursor: pointer; background: none; color: inherit; }
+  #record[data-on="1"] { background: #c0392b; border-color: #c0392b; color: #fff; }
+  #live { min-height: 96px; margin: 16px 0; padding: 12px; border: 1px solid var(--line); border-radius: 8px; white-space: pre-wrap; }
+  #live i { opacity: .55; font-style: normal; }
+  #error { color: #c0392b; min-height: 1.5em; }
+  ul { list-style: none; padding: 0; }
+  li { border-top: 1px solid var(--line); padding: 12px 0; }
+  li small { display: block; opacity: .65; }
+  li button { padding: 2px 10px; font-size: 14px; margin-top: 6px; }
+</style>
+</head>
+<body>
+<h1>Voice notes</h1>
+<button id="record" type="button" data-on="0">Start recording</button>
+<div id="live" aria-live="polite"></div>
+<p id="error" role="alert"></p>
+<h2>Saved notes</h2>
+<ul id="notes"></ul>
+<script type="module" src="/app.js"></script>
+</body>
+</html>

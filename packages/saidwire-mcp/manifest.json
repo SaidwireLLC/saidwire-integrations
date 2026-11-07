@@ -1,0 +1,53 @@
+{
+  "manifest_version": "0.4",
+  "name": "saidwire-mcp",
+  "display_name": "Saidwire Speech-to-Text",
+  "version": "0.1.0",
+  "description": "Transcribe local audio files and public audio URLs to text, SRT/VTT subtitles or word timestamps.",
+  "long_description": "English speech-to-text from Saidwire. Ask Claude to transcribe a recording on your computer or at a public URL. WAV, MP3, FLAC, Ogg/Opus, WebM, M4A/MP4 and AAC up to 100 MB / 60 minutes. $0.30 per audio hour; new keys include 120 free hours, no card: https://saidwire.com/dev",
+  "author": { "name": "Saidwire", "email": "support@saidwire.com", "url": "https://saidwire.com" },
+  "homepage": "https://saidwire.com/dev",
+  "documentation": "https://github.com/SaidwireLLC/saidwire-integrations/tree/main/packages/saidwire-mcp#readme",
+  "support": "https://github.com/SaidwireLLC/saidwire-integrations/issues",
+  "repository": { "type": "git", "url": "https://github.com/SaidwireLLC/saidwire-integrations" },
+  "server": {
+    "type": "uv",
+    "entry_point": "src/saidwire_mcp/server.py",
+    "mcp_config": {
+      "command": "uv",
+      "args": ["run", "--directory", "${__dirname}", "saidwire-mcp"],
+      "env": {
+        "SAIDWIRE_API_KEY": "${user_config.api_key}",
+        "SAIDWIRE_MAX_DOWNLOAD_MB": "${user_config.max_download_mb}"
+      }
+    }
+  },
+  "tools": [
+    { "name": "transcribe_file", "description": "Transcribe a local audio file to text, JSON with word timestamps, SRT or VTT." },
+    { "name": "transcribe_url", "description": "Download a public audio URL and transcribe it." }
+  ],
+  "user_config": {
+    "api_key": {
+      "type": "string",
+      "title": "Saidwire API key",
+      "description": "Starts with sk_live_. Free key with 120 hours, no card: https://saidwire.com/dev",
+      "sensitive": true,
+      "required": true
+    },
+    "max_download_mb": {
+      "type": "number",
+      "title": "URL download limit (MB)",
+      "description": "Largest file transcribe_url will download (max 100).",
+      "default": 100,
+      "min": 1,
+      "max": 100,
+      "required": false
+    }
+  },
+  "keywords": ["speech-to-text", "transcription", "audio", "subtitles", "srt", "vtt"],
+  "license": "MIT",
+  "compatibility": {
+    "platforms": ["darwin", "win32", "linux"],
+    "runtimes": { "python": ">=3.10" }
+  }
+}

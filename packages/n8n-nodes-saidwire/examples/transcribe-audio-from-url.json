@@ -1,0 +1,64 @@
+{
+  "name": "Transcribe audio from a URL with Saidwire",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "9f1c2a10-0001-4c6e-9a51-5a1d00000001",
+      "name": "When clicking 'Execute workflow'",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [0, 0]
+    },
+    {
+      "parameters": {
+        "url": "https://example.com/your-audio-file.mp3",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file"
+            }
+          }
+        }
+      },
+      "id": "9f1c2a10-0002-4c6e-9a51-5a1d00000002",
+      "name": "Download audio",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [220, 0]
+    },
+    {
+      "parameters": {
+        "resource": "audio",
+        "operation": "transcribe",
+        "binaryPropertyName": "data",
+        "responseFormat": "json",
+        "options": {
+          "language": "en"
+        }
+      },
+      "id": "9f1c2a10-0003-4c6e-9a51-5a1d00000003",
+      "name": "Transcribe audio",
+      "type": "n8n-nodes-saidwire.saidwire",
+      "typeVersion": 1,
+      "position": [440, 0],
+      "credentials": {
+        "saidwireApi": {
+          "id": "",
+          "name": "Saidwire API"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "When clicking 'Execute workflow'": {
+      "main": [[{ "node": "Download audio", "type": "main", "index": 0 }]]
+    },
+    "Download audio": {
+      "main": [[{ "node": "Transcribe audio", "type": "main", "index": 0 }]]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {}
+}

@@ -1,0 +1,9 @@
+{
+  "name": "saidwire-video-captions",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Make SRT and WebVTT captions for a video, and preview them in the browser.",
+  "engines": { "node": ">=20.12" },
+  "scripts": { "start": "node server.js", "captions": "node make-captions.js", "test": "node --test --test-timeout=30000" }
+}

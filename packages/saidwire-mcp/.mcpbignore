@@ -1,0 +1,12 @@
+.venv/
+dist/
+tests/
+.pytest_cache/
+**/__pycache__/
+*.mcpb
+smithery.yaml
+server.json
+.gitignore
+uv.lock
+Dockerfile
+glama.json

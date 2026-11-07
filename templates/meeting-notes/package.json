@@ -1,0 +1,9 @@
+{
+  "name": "saidwire-meeting-notes",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Upload a meeting recording, get a timestamped transcript and simple notes.",
+  "engines": { "node": ">=20.12" },
+  "scripts": { "start": "node server.js", "test": "node --test --test-timeout=30000" }
+}

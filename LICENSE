@@ -1,0 +1,13 @@
+This repository holds several packages under different licences. The licence
+file inside each package is the one that applies to that package.
+
+packages/livekit-plugins-saidwire   Apache-2.0   packages/livekit-plugins-saidwire/LICENSE
+packages/pipecat-saidwire           MIT          packages/pipecat-saidwire/LICENSE
+packages/n8n-nodes-saidwire         MIT          packages/n8n-nodes-saidwire/LICENSE
+packages/ai-sdk-saidwire            MIT          packages/ai-sdk-saidwire/LICENSE
+packages/saidwire-mcp               MIT          packages/saidwire-mcp/LICENSE
+
+templates/, prompts/ and docs/ do not declare a licence yet. No licence is
+granted for those folders until a licence file is added here.
+
+Copyright (c) 2026 Saidwire

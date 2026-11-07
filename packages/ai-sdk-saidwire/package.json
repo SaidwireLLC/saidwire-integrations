@@ -1,0 +1,78 @@
+{
+  "name": "@saidwire/ai-sdk-provider",
+  "version": "0.1.0",
+  "description": "Saidwire speech-to-text provider for the Vercel AI SDK (transcribe).",
+  "license": "MIT",
+  "author": "Saidwire <support@saidwire.com>",
+  "homepage": "https://saidwire.com/docs/api",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SaidwireLLC/saidwire-integrations.git",
+    "directory": "packages/ai-sdk-saidwire"
+  },
+  "bugs": {
+    "url": "https://github.com/SaidwireLLC/saidwire-integrations/issues",
+    "email": "support@saidwire.com"
+  },
+  "keywords": [
+    "ai",
+    "ai-sdk",
+    "vercel-ai",
+    "speech-to-text",
+    "transcription",
+    "stt",
+    "saidwire"
+  ],
+  "sideEffects": false,
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run test/unit.test.ts",
+    "test:live": "SAIDWIRE_LIVE=1 vitest run test/live.test.ts",
+    "prepublishOnly": "npm run typecheck && npm test && npm run build"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@ai-sdk/provider": "^4.0.35",
+    "@ai-sdk/provider-utils": "^5.0.72"
+  },
+  "peerDependencies": {
+    "zod": "^3.25.76 || ^4.1.8"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.6",
+    "ai": "^7.0.159",
+    "tsup": "^9.0.0",
+    "typescript": "^5.9.3",
+    "vitest": "^5.0.5",
+    "zod": "^4.6.7"
+  }
+}

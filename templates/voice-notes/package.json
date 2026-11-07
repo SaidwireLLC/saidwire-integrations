@@ -1,0 +1,10 @@
+{
+  "name": "saidwire-voice-notes",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Talk into the browser, watch the words appear, keep the note.",
+  "engines": { "node": ">=20.12" },
+  "scripts": { "start": "node server.js", "test": "node --test --test-timeout=20000" },
+  "dependencies": { "ws": "^8.18.0" }
+}

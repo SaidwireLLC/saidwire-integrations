@@ -1,0 +1,9 @@
+{
+  "name": "saidwire-podcast-transcripts",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Turn an episode, a URL or a whole feed into a transcript, captions and a web page.",
+  "engines": { "node": ">=20.12" },
+  "scripts": { "transcribe": "node transcribe.js", "test": "node --test --test-timeout=30000" }
+}

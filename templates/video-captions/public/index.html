@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video captions</title>
+<style>
+  :root { color-scheme: light dark; --line: #8884; }
+  body { font: 17px/1.5 system-ui, sans-serif; max-width: 760px; margin: 0 auto; padding: 24px 16px; }
+  h1 { font-size: 24px; margin: 0 0 8px; }
+  video { width: 100%; border-radius: 8px; margin: 12px 0; background: #000; }
+  a.button, input::file-selector-button { font: inherit; padding: 8px 14px; border-radius: 8px; border: 1px solid var(--line); background: none; color: inherit; cursor: pointer; text-decoration: none; display: inline-block; }
+  #status.bad { color: #c0392b; }
+</style>
+</head>
+<body>
+<h1>Video captions</h1>
+<p>Choose a video in English. You will get SRT and WebVTT files, and a preview here.</p>
+<input id="file" type="file" accept="video/*,audio/*">
+<p id="status" role="status"></p>
+<video id="player" controls hidden></video>
+<p id="links" hidden><a class="button" id="srt" download="captions.srt">Download .srt</a> <a class="button" id="vtt" download="captions.vtt">Download .vtt</a></p>
+<script type="module">
+const $ = (id) => document.getElementById(id);
+const blobUrl = (text, type) => URL.createObjectURL(new Blob([text], { type }));
+$('file').onchange = async () => {
+  const file = $('file').files[0];
+  if (!file) return;
+  $('links').hidden = true;
+  $('status').className = '';
+  $('status').textContent = 'Making captions…';
+  const res = await fetch('/api/captions', { method: 'POST', body: file });
+  const body = await res.json();
+  if (!res.ok) { $('status').className = 'bad'; $('status').textContent = body.error; return; }
+  $('status').textContent = `${body.count} captions.`;
+  const player = $('player');
+  player.replaceChildren();
+  player.src = URL.createObjectURL(file);
+  const track = Object.assign(document.createElement('track'), { kind: 'captions', srclang: 'en', label: 'English', default: true, src: blobUrl(body.vtt, 'text/vtt') });
+  player.append(track);
+  player.hidden = false;
+  $('srt').href = blobUrl(body.srt, 'text/plain');
+  $('vtt').href = blobUrl(body.vtt, 'text/vtt');
+  $('links').hidden = false;
+};
+</script>
+</body>
+</html>

@@ -1,0 +1,39 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.Saidwire/saidwire-mcp",
+  "title": "Saidwire Speech-to-Text",
+  "description": "Transcribe local audio files and public audio URLs to text, SRT/VTT or word timestamps.",
+  "websiteUrl": "https://saidwire.com/dev",
+  "repository": {
+    "url": "https://github.com/SaidwireLLC/saidwire-integrations",
+    "source": "github",
+    "subfolder": "packages/saidwire-mcp"
+  },
+  "version": "0.1.0",
+  "packages": [
+    {
+      "registryType": "pypi",
+      "identifier": "saidwire-mcp",
+      "version": "0.1.0",
+      "runtimeHint": "uvx",
+      "transport": {
+        "type": "stdio"
+      },
+      "environmentVariables": [
+        {
+          "name": "SAIDWIRE_API_KEY",
+          "description": "Saidwire API key (free key with 120 hours at https://saidwire.com/dev)",
+          "isRequired": true,
+          "isSecret": true,
+          "format": "string"
+        },
+        {
+          "name": "SAIDWIRE_MAX_DOWNLOAD_MB",
+          "description": "Size limit in MB for transcribe_url downloads (default 100)",
+          "isRequired": false,
+          "format": "number"
+        }
+      ]
+    }
+  ]
+}

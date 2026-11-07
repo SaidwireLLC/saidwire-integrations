@@ -1,0 +1,48 @@
+[build-system]
+requires = ["hatchling>=1.24"]
+build-backend = "hatchling.build"
+
+[project]
+name = "saidwire-mcp"
+version = "0.1.0"
+description = "Saidwire speech-to-text for Claude, Cursor and other MCP clients: transcribe audio files and URLs, with SRT/VTT and word timestamps."
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+requires-python = ">=3.10"
+authors = [{ name = "Saidwire", email = "support@saidwire.com" }]
+keywords = ["mcp", "model-context-protocol", "speech-to-text", "transcription", "stt", "asr", "subtitles", "srt", "claude"]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Intended Audience :: Developers",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3",
+  "Topic :: Multimedia :: Sound/Audio :: Speech",
+]
+dependencies = [
+  "mcp>=1.20",
+  "httpx>=0.27",
+  "anyio>=4",
+]
+
+[project.urls]
+Homepage = "https://saidwire.com/dev"
+Documentation = "https://saidwire.com/docs/api"
+Repository = "https://github.com/SaidwireLLC/saidwire-integrations/tree/main/packages/saidwire-mcp"
+
+[project.scripts]
+saidwire-mcp = "saidwire_mcp.server:main"
+
+[project.optional-dependencies]
+test = ["pytest>=8", "pytest-asyncio>=0.23"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/saidwire_mcp"]
+
+[tool.hatch.build.targets.sdist]
+include = ["src", "tests", "README.md", "LICENSE", "server.json", "smithery.yaml", "manifest.json"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+markers = ["live: calls the real Saidwire API (needs SAIDWIRE_API_KEY and SAIDWIRE_TEST_AUDIO)"]

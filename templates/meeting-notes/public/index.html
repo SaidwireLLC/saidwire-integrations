@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Meeting notes</title>
+<style>
+  :root { color-scheme: light dark; --line: #8884; }
+  body { font: 17px/1.5 system-ui, sans-serif; max-width: 720px; margin: 0 auto; padding: 24px 16px; }
+  h1 { font-size: 24px; margin: 0 0 8px; }
+  button, input::file-selector-button { font: inherit; padding: 8px 14px; border-radius: 8px; border: 1px solid var(--line); background: none; color: inherit; cursor: pointer; }
+  #status { min-height: 1.5em; }
+  #status.bad { color: #c0392b; }
+  pre { white-space: pre-wrap; border: 1px solid var(--line); border-radius: 8px; padding: 12px; font: inherit; }
+</style>
+</head>
+<body>
+<h1>Meeting notes</h1>
+<p>Choose a recording of up to 60 minutes and 100 MB: WAV, MP3, FLAC, Ogg, WebM or AAC. English only.</p>
+<input id="file" type="file" accept=".wav,.mp3,.flac,.ogg,.opus,.webm,.aac,audio/*">
+<p id="status" role="status"></p>
+<div id="result" hidden>
+  <button id="copy" type="button">Copy</button>
+  <button id="save" type="button">Download .md</button>
+  <pre id="notes"></pre>
+</div>
+<script type="module">
+const $ = (id) => document.getElementById(id);
+let current = null;
+$('file').onchange = async () => {
+  const file = $('file').files[0];
+  if (!file) return;
+  $('result').hidden = true;
+  $('status').className = '';
+  $('status').textContent = 'Transcribing…';
+  const res = await fetch(`/api/notes?name=${encodeURIComponent(file.name)}`, { method: 'POST', headers: { 'Content-Type': file.type || 'application/octet-stream' }, body: file });
+  const body = await res.json();
+  if (!res.ok) { $('status').className = 'bad'; $('status').textContent = body.error; return; }
+  current = body;
+  $('status').textContent = '';
+  $('notes').textContent = body.markdown;
+  $('result').hidden = false;
+};
+$('copy').onclick = () => navigator.clipboard.writeText(current.markdown);
+$('save').onclick = () => {
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([current.markdown], { type: 'text/markdown' }));
+  a.download = `${current.title}.md`;
+  a.click();
+};
+</script>
+</body>
+</html>

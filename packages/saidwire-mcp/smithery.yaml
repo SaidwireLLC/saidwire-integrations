@@ -1,0 +1,28 @@
+# Smithery metadata (local stdio server). Smithery's current flow for local servers is the
+# MCPB bundle (saidwire-mcp.mcpb, built from manifest.json); this file covers the
+# repository-based flow and documents the config.
+startCommand:
+  type: stdio
+  configSchema:
+    type: object
+    required: ["saidwireApiKey"]
+    properties:
+      saidwireApiKey:
+        type: string
+        description: "Your Saidwire API key (free key, 120 hours, no card: https://saidwire.com/dev)"
+      maxDownloadMb:
+        type: number
+        default: 100
+        description: "Size limit in MB for transcribe_url downloads"
+  commandFunction: |-
+    (config) => ({
+      command: "uvx",
+      args: ["saidwire-mcp"],
+      env: {
+        SAIDWIRE_API_KEY: config.saidwireApiKey,
+        SAIDWIRE_MAX_DOWNLOAD_MB: String(config.maxDownloadMb || 100)
+      }
+    })
+  exampleConfig:
+    saidwireApiKey: "sk_live_your_key_here"
+    maxDownloadMb: 100
